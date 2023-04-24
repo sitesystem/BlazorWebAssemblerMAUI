@@ -60,9 +60,9 @@
     [Parameter]
     public int Id { get; set; }
 
-    TbPersonaViewModel oPersona = new TbPersonaViewModel();
-    Response<object>? oRespuesta = new Response<object>();
-    Response<TbPersonaViewModel>? oRespuestaPersona = new Response<TbPersonaViewModel>();
+    TbPersonaViewModel oPersona = new();
+    Response<object>? oRespuesta = new();
+    Response<TbPersonaViewModel> oRespuestaPersona = new();
 
     public string url = "/api/Personas";
 

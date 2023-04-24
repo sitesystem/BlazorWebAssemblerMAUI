@@ -1,0 +1,32 @@
+﻿@page "/eliminarPersona/{id:int}"
+
+@using BlazorHybridMAUI.CapaEntities.ViewModels.Response;
+@using BlazorHybridMAUI.CapaServices.BusinessLogic;
+
+@inject IPersona servicioPersona
+@inject NavigationManager NavigationManager
+
+<h3>Eliminar Persona Alert</h3>
+
+<p>¿Deseas eliminar los datos de la persona con ID: @Id?</p>
+
+<div class="col-12">
+    <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="@(() => NavigationManager.NavigateTo("/personas"))">Cancelar</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="Delete">Confirmar</MudButton>
+</div>
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    Response<object> oRespuesta = new Response<object>();
+
+    private async Task Delete()
+    {
+        var response = await servicioPersona.DeleteDataAsync(Id);
+        oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+
+        NavigationManager.NavigateTo("/personas");
+    }
+}

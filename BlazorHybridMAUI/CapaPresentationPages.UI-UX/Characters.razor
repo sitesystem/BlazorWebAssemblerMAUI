@@ -1,0 +1,34 @@
+﻿@page "/characters"
+
+@using BlazorHybridMAUI.CapaServices.BusinessLogic;
+@using BlazorHybridMAUI.CapaEntities.ViewModels.Request;
+
+@inject IRickAndMorty servicioCharacters
+
+<h3>Personajes</h3>
+<hr />
+
+@if (_rickAndMortyModel == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    @foreach (var result in _rickAndMortyModel.results)
+    {
+        <div>
+            <h4>@result.name</h4>
+            <em>@result.origin</em><br>
+            <em>@result.created</em><br>
+            <img src="@result.image">
+        </div>
+        <hr />
+    }
+}
+
+@code
+{
+    private RickAndMortyModel _rickAndMortyModel;
+
+    protected override async Task OnInitializedAsync() => _rickAndMortyModel = await servicioCharacters.GetDataAsync();
+}

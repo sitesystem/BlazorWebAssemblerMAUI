@@ -1,0 +1,3 @@
+-- Mapear Base de Datos SQL Server con .NET Core Entity Framework
+-> Scaffold-DBContext "Server=localhost;Database=db_docentes;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+-> Scaffold-DBContext "Server=www.developers.upiicsa.ipn.mx;Database=db_docentes;User ID=develop;pwd=set.p4$$w0RD.sqla" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force

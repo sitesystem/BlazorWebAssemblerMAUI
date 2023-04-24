@@ -1,0 +1,93 @@
+﻿@page "/personaForm"
+@page "/personaForm/{id:int}"
+
+@using BlazorWebAssembly.Shared.CapaEntities.ViewModels.Request;
+@using BlazorWebAssembly.Shared.CapaEntities.ViewModels.Response;
+@using BlazorWebAssembly.Shared.CapaServices.BusinessLogic.ClientServices;
+
+@inject IPersona servicioPersona
+@inject NavigationManager NavigationManager
+
+<h3>Datos de la Persona</h3>
+
+<EditForm Model="@oPersona">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="form-group row mb-1">
+                <label class="col-3">Nombre:</label>
+                <div class="col-9">
+                    <InputText class="form-control" @bind-Value="@oPersona.PerNombre"></InputText>
+                    @*<div><ValidationMessage For="@(() =>oPersona.PerNombre)"</div>*@
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-3">Edad:</label>
+                <div class="col-9">
+                    <InputNumber class="form-control" @bind-Value="@oPersona.PerEdad"></InputNumber>
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-3">Correo Electrónico:</label>
+                <div class="col-9">
+                    <InputText class="form-control" @bind-Value="@oPersona.PerEmail"></InputText>
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-3">Fecha de Alta:</label>
+                <div class="col-9">
+                    <InputText class="form-control" @bind-Value="@oPersona.PerFechaAlta"></InputText>
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <div class="col-12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="@(() => NavigationManager.NavigateTo("/personas"))">Cancelar</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="Save">Guardar</MudButton>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</EditForm>
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    TbPersonaViewModel oPersona = new TbPersonaViewModel();
+    Response<object>? oRespuesta = new Response<object>();
+    Response<TbPersonaViewModel>? oRespuestaPersona = new Response<TbPersonaViewModel>();
+
+    public string url = "/api/Personas";
+
+    private async Task Save()
+    {
+        if (Id != 0)
+        {
+            var response = await servicioPersona.EditDataAsync(url, oPersona);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+        }
+        else
+        {
+            var response = await servicioPersona.AddDataAsync(url, oPersona);
+            oRespuesta = response.Content.ReadFromJsonAsync<Response<object>>().Result;
+        }
+
+        NavigationManager.NavigateTo("/personas");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != 0)
+        {
+            oRespuestaPersona = await servicioPersona.GetDataByIdAsync(Id);
+            oPersona = oRespuestaPersona.Data;
+        }
+    }
+}
